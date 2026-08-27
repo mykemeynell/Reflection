@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace mykemeynell\Reflection\Application;
 
 use Closure;
-use JetBrains\PhpStorm\Pure;
 use mykemeynell\Reflection\Bindings\ContextualBindingBuilder;
 use mykemeynell\Reflection\Exceptions\ContainerException;
 use mykemeynell\Reflection\Exceptions\NotFoundException;
@@ -139,7 +138,6 @@ final class Container implements ContainerInterface
      * @param  string  ...$consumers  The list of consumer classes or identifiers for which the binding is being defined.
      * @return ContextualBindingBuilder An instance of ContextualBindingBuilder to define the specific binding rules.
      */
-    #[Pure]
     public function when(string ...$consumers): ContextualBindingBuilder
     {
         return new ContextualBindingBuilder($this, $consumers);
