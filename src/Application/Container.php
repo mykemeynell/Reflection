@@ -8,11 +8,13 @@ use Closure;
 use mykemeynell\Reflection\Bindings\ContextualBindingBuilder;
 use mykemeynell\Reflection\Exceptions\ContainerException;
 use mykemeynell\Reflection\Exceptions\NotFoundException;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use ReflectionClass;
 use ReflectionNamedType;
 use ReflectionParameter;
-use RuntimeException;
+use Throwable;
 
 final class Container implements ContainerInterface
 {
@@ -62,11 +64,37 @@ final class Container implements ContainerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Finds an entry of the container by its identifier and returns it.
+     *
+     * @param  string  $id  Identifier of the entry to look for.
+     * @return mixed Entry.
+     *
+     * @throws NotFoundException No entry was found for this identifier.
+     * @throws ContainerException Error while retrieving the entry.
      */
-    public function get(string $id)
+    public function get(string $id): mixed
     {
-        return $this->make($id);
+        if (! $this->has($id)) {
+            throw new NotFoundException(
+                sprintf('Identifier [%s] was not found in the container.', $id)
+            );
+        }
+
+        try {
+            return $this->make($id);
+        } catch (NotFoundExceptionInterface $exception) {
+            throw new ContainerException(
+                sprintf('Cannot resolve [%s] due to a missing dependency.', $id),
+                previous: $exception
+            );
+        } catch (ContainerExceptionInterface $exception) {
+            throw $exception;
+        } catch (Throwable $exception) {
+            throw new ContainerException(
+                sprintf('Cannot resolve [%s]: %s', $id, $exception->getMessage()),
+                previous: $exception
+            );
+        }
     }
 
     /**
@@ -172,7 +200,7 @@ final class Container implements ContainerInterface
      * @param  array  $parameters  Named parameters that are to be passed to the abstract during resolution.
      * @return mixed The resolved instance of the abstract type.
      *
-     * @throws RuntimeException If a circular dependency is detected during resolution.
+     * @throws ContainerException If a circular dependency is detected during resolution.
      */
     public function make(string|Closure $abstract, array $parameters = []): mixed
     {
@@ -186,7 +214,7 @@ final class Container implements ContainerInterface
 
         if (is_string($abstract)) {
             if (in_array($abstract, $this->resolving, strict: true)) {
-                throw new RuntimeException(
+                throw new ContainerException(
                     sprintf(
                         'Circular dependency detected while resolving [%s]: %s.',
                         $abstract,
@@ -241,8 +269,8 @@ final class Container implements ContainerInterface
      * @param  array  $parameters  Named parameters that are to be passed to the class constructor.
      * @return object An instance of the specified class.
      *
-     * @throws RuntimeException If the class does not exist.
-     * @throws RuntimeException If the class is not instantiable.
+     * @throws NotFoundException If the class does not exist.
+     * @throws ContainerException If the class is not instantiable.
      */
     private function build(string $class, array $parameters = []): object
     {
@@ -285,7 +313,7 @@ final class Container implements ContainerInterface
      * @param  array  $parameters  Named parameters that are to be passed to the constructor.
      * @return mixed The resolved value for the parameter.
      *
-     * @throws RuntimeException If the parameter cannot be resolved and no default value is available.
+     * @throws ContainerException If the parameter cannot be resolved and no default value is available.
      */
     private function resolveParameter(
         string $consumer,

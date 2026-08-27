@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace mykemeynell\Reflection\Exceptions;
 
 use Psr\Container\NotFoundExceptionInterface;

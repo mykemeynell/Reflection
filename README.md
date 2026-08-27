@@ -186,7 +186,7 @@ class ServiceB {
 }
 
 $container->make(ServiceA::class);
-// Throws RuntimeException: Circular dependency detected while resolving [ServiceA]: ServiceA -> ServiceB -> ServiceA.
+// Throws ContainerException: Circular dependency detected while resolving [ServiceA]: ServiceA -> ServiceB -> ServiceA.
 ```
 
 ---
@@ -208,6 +208,7 @@ function bootstrap(ContainerInterface $container): void {
 PSR-11 exception classes:
 - `mykemeynell\Reflection\Exceptions\NotFoundException` (implements `Psr\Container\NotFoundExceptionInterface`)
 - `mykemeynell\Reflection\Exceptions\ContainerException` (implements `Psr\Container\ContainerExceptionInterface`)
+- `mykemeynell\Reflection\Exceptions\DependencyNotSpecifiedException` (implements `Psr\Container\ContainerExceptionInterface`)
 
 ---
 

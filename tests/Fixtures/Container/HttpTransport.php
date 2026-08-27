@@ -6,6 +6,4 @@ namespace Tests\Fixtures\Container;
 
 use Tests\Fixtures\Container\Contracts\Transport;
 
-final class HttpTransport implements Transport
-{
-}
+final class HttpTransport implements Transport {}

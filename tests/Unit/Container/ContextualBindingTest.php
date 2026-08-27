@@ -8,9 +8,9 @@ use Tests\Fixtures\Container\Contracts\Transport;
 use Tests\Fixtures\Container\CustomerDispatcher;
 use Tests\Fixtures\Container\DirectDispatcher;
 use Tests\Fixtures\Container\HttpTransport;
+use Tests\Fixtures\Container\OutletDispatcher;
 use Tests\Fixtures\Container\SpecificServiceDispatcher;
 use Tests\Fixtures\Container\SpecificTransportService;
-use Tests\Fixtures\Container\OutletDispatcher;
 
 beforeEach(function (): void {
     $this->container = new Container;

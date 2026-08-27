@@ -7,8 +7,8 @@ use Tests\Fixtures\Container\Configuration;
 use Tests\Fixtures\Container\ConfiguredTransport;
 use Tests\Fixtures\Container\Contracts\Transport;
 use Tests\Fixtures\Container\HttpTransport;
-use Tests\Fixtures\Container\SpecificTransportService;
 use Tests\Fixtures\Container\SimpleService;
+use Tests\Fixtures\Container\SpecificTransportService;
 
 beforeEach(function (): void {
     $this->container = new Container;
