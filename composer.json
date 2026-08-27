@@ -27,13 +27,12 @@
     },
     "description": "Tiny PHP reflection implementation",
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.3",
         "psr/container": "^2.0"
     },
     "require-dev": {
         "pestphp/pest": "^5.1",
-        "laravel/pint": "^1.30",
-        "symfony/var-dumper": "^v8.1"
+        "laravel/pint": "^1.30"
     },
     "config": {
         "allow-plugins": {
