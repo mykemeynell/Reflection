@@ -170,39 +170,45 @@ final class Container implements ContainerInterface
      * and a new instance is created. Supports managing singleton objects
      * and detecting circular dependencies during resolution.
      *
-     * @param  string  $abstract  The identifier of the abstract type to resolve.
+     * @param  string|Closure  $abstract  The identifier of the abstract type or closure to resolve.
      * @param  array  $parameters  Named parameters that are to be passed to the abstract during resolution.
      * @return mixed The resolved instance of the abstract type.
      *
      * @throws RuntimeException If a circular dependency is detected during resolution.
      */
-    public function make(string $abstract, array $parameters = []): mixed
+    public function make(string|Closure $abstract, array $parameters = []): mixed
     {
-        if (isset($this->instances[$abstract])) {
+        if (is_string($abstract) && isset($this->instances[$abstract])) {
             return $this->instances[$abstract];
         }
 
-        $binding = $this->bindings[$abstract] ?? self::bindingToArray($abstract, singleton: false);
+        $binding = is_string($abstract) && isset($this->bindings[$abstract])
+            ? $this->bindings[$abstract]
+            : self::bindingToArray($abstract, singleton: false);
 
-        if (in_array($abstract, $this->resolving, strict: true)) {
-            throw new RuntimeException(
-                sprintf(
-                    'Circular dependency detected while resolving [%s]: %s.',
-                    $abstract,
-                    implode(' -> ', [...$this->resolving, $abstract])
-                )
-            );
+        if (is_string($abstract)) {
+            if (in_array($abstract, $this->resolving, strict: true)) {
+                throw new RuntimeException(
+                    sprintf(
+                        'Circular dependency detected while resolving [%s]: %s.',
+                        $abstract,
+                        implode(' -> ', [...$this->resolving, $abstract])
+                    )
+                );
+            }
+
+            $this->resolving[] = $abstract;
         }
-
-        $this->resolving[] = $abstract;
 
         try {
             $object = $this->resolve($binding['concrete'], $parameters);
         } finally {
-            array_pop($this->resolving);
+            if (is_string($abstract)) {
+                array_pop($this->resolving);
+            }
         }
 
-        if ($binding['singleton'] && is_object($object)) {
+        if (is_string($abstract) && $binding['singleton'] && is_object($object)) {
             $this->instances[$abstract] = $object;
         }
 
