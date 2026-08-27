@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace mykemeynell\Reflector\Bindings;
+namespace mykemeynell\Reflection\Bindings;
 
 use Closure;
 use LogicException;
-use mykemeynell\Reflector\Application\Container;
+use mykemeynell\Reflection\Application\Container;
 
 final class ContextualBindingBuilder
 {

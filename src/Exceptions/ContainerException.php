@@ -1,6 +1,6 @@
 <?php
 
-namespace mykemeynell\Reflector\Exceptions;
+namespace mykemeynell\Reflection\Exceptions;
 
 use Psr\Container\ContainerExceptionInterface;
 

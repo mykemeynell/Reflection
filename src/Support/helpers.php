@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace mykemeynell\Reflector\Helpers;
+namespace mykemeynell\Reflection\Helpers;
 
 use Closure;
-use mykemeynell\Reflector\Application\Container;
+use mykemeynell\Reflection\Application\Container;
 
 if (! function_exists('app')) {
     /**

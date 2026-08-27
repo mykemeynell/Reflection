@@ -1,5 +1,5 @@
 {
-    "name": "mykemeynell/reflect",
+    "name": "mykemeynell/reflection",
     "type": "library",
     "authors": [
         {
@@ -9,7 +9,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "mykemeynell\\Reflector\\": "src/"
+            "mykemeynell\\Reflection\\": "src/"
         },
         "files": [
             "src/Support/helpers.php"

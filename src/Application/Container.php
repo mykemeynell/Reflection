@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace mykemeynell\Reflector\Application;
+namespace mykemeynell\Reflection\Application;
 
 use Closure;
 use JetBrains\PhpStorm\Pure;
-use mykemeynell\Reflector\Bindings\ContextualBindingBuilder;
-use mykemeynell\Reflector\Exceptions\ContainerException;
-use mykemeynell\Reflector\Exceptions\NotFoundException;
+use mykemeynell\Reflection\Bindings\ContextualBindingBuilder;
+use mykemeynell\Reflection\Exceptions\ContainerException;
+use mykemeynell\Reflection\Exceptions\NotFoundException;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
 use ReflectionNamedType;

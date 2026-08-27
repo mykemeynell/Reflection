@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use mykemeynell\Reflector\Application\Container;
-use mykemeynell\Reflector\Exceptions\ContainerException;
-use mykemeynell\Reflector\Exceptions\NotFoundException;
+use mykemeynell\Reflection\Application\Container;
+use mykemeynell\Reflection\Exceptions\ContainerException;
+use mykemeynell\Reflection\Exceptions\NotFoundException;
 use Psr\Container\ContainerInterface;
 use Tests\Fixtures\Container\Contracts\Transport;
 use Tests\Fixtures\Container\HttpTransport;

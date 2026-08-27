@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use mykemeynell\Reflector\Application\Container;
+use mykemeynell\Reflection\Application\Container;
 use Tests\Fixtures\Container\ChangeProcessor;
 use Tests\Fixtures\Container\Contracts\Transport;
 use Tests\Fixtures\Container\CustomerDispatcher;

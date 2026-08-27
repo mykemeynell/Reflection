@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use mykemeynell\Reflector\Application\Container;
-use mykemeynell\Reflector\Exceptions\ContainerException;
+use mykemeynell\Reflection\Application\Container;
+use mykemeynell\Reflection\Exceptions\ContainerException;
 use Tests\Fixtures\Container\AbstractService;
 use Tests\Fixtures\Container\Circular\CircularA;
 use Tests\Fixtures\Container\Configuration;

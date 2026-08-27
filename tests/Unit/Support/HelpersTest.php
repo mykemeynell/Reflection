@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use mykemeynell\Reflector\Application\Container;
-use mykemeynell\Reflector\Exceptions\ContainerException;
-use mykemeynell\Reflector\Exceptions\NotFoundException;
+use mykemeynell\Reflection\Application\Container;
+use mykemeynell\Reflection\Exceptions\ContainerException;
+use mykemeynell\Reflection\Exceptions\NotFoundException;
 use Tests\Fixtures\Container\AbstractService;
 use Tests\Fixtures\Container\Contracts\Transport;
 use Tests\Fixtures\Container\CustomerDispatcher;
@@ -18,7 +18,7 @@ use Tests\Fixtures\Container\SimpleDependency;
 use Tests\Fixtures\Container\SimpleService;
 use Tests\Fixtures\Container\SpecificTransportService;
 
-use function mykemeynell\Reflector\Helpers\app;
+use function mykemeynell\Reflection\Helpers\app;
 
 beforeEach(function (): void {
     $this->container = new Container;
