@@ -1,23 +1,42 @@
 {
-    "name": "mykemeynell/reflect",
+    "name": "mykemeynell/reflection",
     "type": "library",
     "authors": [
         {
             "name": "Myke Meynell",
-            "email": "myke.meynell@rarecreativegroup.com"
+            "email": "hi@myke.codes"
         }
     ],
     "autoload": {
         "psr-4": {
-            "mykemeynell\\Application\\": "src/"
+            "mykemeynell\\Reflection\\": "src/"
         },
         "files": [
             "src/Support/helpers.php"
         ]
     },
-    "require": {},
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/pest",
+        "lint": "vendor/bin/pint --parallel",
+        "lint:check": "@lint --test"
+    },
     "description": "Tiny PHP reflection implementation",
+    "require": {
+        "php": ">=8.3",
+        "psr/container": "^2.0"
+    },
     "require-dev": {
-        "symfony/var-dumper": "^5.0"
+        "pestphp/pest": "^4.7|^5.1",
+        "laravel/pint": "^1.30"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     }
 }
