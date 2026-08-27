@@ -9,15 +9,35 @@
     ],
     "autoload": {
         "psr-4": {
-            "mykemeynell\\Application\\": "src/"
+            "mykemeynell\\Reflector\\": "src/"
         },
         "files": [
             "src/Support/helpers.php"
         ]
     },
-    "require": {},
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/pest",
+        "lint": "vendor/bin/pint --parallel",
+        "lint:check": "@lint --test"
+    },
     "description": "Tiny PHP reflection implementation",
+    "require": {
+        "php": ">=8.1",
+        "psr/container": "^2.0"
+    },
     "require-dev": {
-        "symfony/var-dumper": "^5.0"
+        "pestphp/pest": "^5.1",
+        "laravel/pint": "^1.30",
+        "symfony/var-dumper": "^v8.1"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     }
 }

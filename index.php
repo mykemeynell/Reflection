@@ -1,14 +1,15 @@
 <?php
 
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__.'/vendor/autoload.php';
 
-container()->bind('anon', function ($app) {
-//    return $app;
-    return new Exception("Hello");
-});
+use function \mykemeynell\Reflector\Helpers\app;
 
-echo "<pre>";
-var_export(
-    container()->make('anon')
-);
-die;
+app()->bind('test', fn () => 'tested');
+app()->singleton('test_singleton', fn () => 'tested');
+
+\Symfony\Component\VarDumper\VarDumper::dump([
+    app(),
+    app('test'),
+    app('test_singleton'),
+    app()
+]);

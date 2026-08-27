@@ -1,22 +1,23 @@
 <?php
 
-if(! function_exists('container')) {
+declare(strict_types=1);
+
+namespace mykemeynell\Reflector\Helpers;
+
+use mykemeynell\Reflector\Application\Container;
+
+if (! function_exists('app')) {
     /**
-     * Resolve a class from the current container.
+     * Resolve and return a service from the container or return the container instance itself.
      *
-     * @param string $target
-     * @param array  $args
-     *
-     * @return \mykemeynell\Application\Container
+     * @param  string|\Closure|null  $abstract  The abstract type or closure to resolve. If null, the container instance is returned.
+     * @param  mixed  ...$parameters  Additional parameters to pass to the resolution process.
+     * @return mixed The resolved service instance or the container instance.
      */
-    function container(?string $target = null, ...$args)
+    function app(string|\Closure|null $abstract = null, ...$parameters): mixed
     {
-        $container = \mykemeynell\Application\Container::getContainerInstance();
-
-        if(empty($target)) {
-            return $container;
-        }
-
-        return call_user_func_array([$container, 'make'], func_get_args());
+        return ($container = Container::getInstance()) && $abstract !== null
+            ? $container->make($abstract, $parameters)
+            : $container;
     }
 }
