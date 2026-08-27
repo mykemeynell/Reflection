@@ -32,12 +32,12 @@ final class ContextualBindingBuilder
     /**
      * Binds a given implementation to a contextual dependency for specified consumers.
      *
-     * @param  string|Closure  $implementation  The implementation to associate with the dependency.
-     *                                          This can be a concrete class name as a string or a Closure.
+     * @param  Closure|string|object  $implementation  The implementation to associate with the dependency.
+     *                                                 This can be a concrete class name as a string, a Closure, or an object instance.
      *
      * @throws DependencyNotSpecifiedException If no contextual dependency has been specified before calling this method.
      */
-    public function give(string|Closure $implementation): void
+    public function give(string|object $implementation): void
     {
         if ($this->dependency === null) {
             throw new DependencyNotSpecifiedException('A contextual dependency must be specified before using needs().');

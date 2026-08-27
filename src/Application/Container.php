@@ -176,12 +176,12 @@ final class Container implements ContainerInterface
      *
      * @param  array  $consumers  An array of classes or interfaces that consume the dependency.
      * @param  string  $dependency  The dependency to be resolved for the specified consumers.
-     * @param  string|Closure  $implementation  The concrete implementation or closure to resolve the dependency.
+     * @param  Closure|string|object  $implementation  The concrete implementation, closure, or object instance to resolve the dependency.
      */
     public function addContextualBinding(
         array $consumers,
         string $dependency,
-        string|Closure $implementation
+        string|object $implementation
     ): void {
         foreach ($consumers as $consumer) {
             $this->contextual[$consumer][$dependency] = $implementation;
@@ -244,12 +244,12 @@ final class Container implements ContainerInterface
     /**
      * Resolves a given concrete definition into an instance.
      *
-     * @param  string|Closure  $concrete  The concrete definition to be resolved. This can be
-     *                                    a class name as a string, or a Closure to invoke.
+     * @param  Closure|string|object  $concrete  The concrete definition to be resolved. This can be
+     *                                           a class name as a string, a Closure to invoke, or an object instance.
      * @param  array  $parameters  Named parameters that are to be passed during resolution.
      * @return mixed The resolved instance of the given concrete definition.
      */
-    private function resolve(string|Closure $concrete, array $parameters = []): mixed
+    private function resolve(string|object $concrete, array $parameters = []): mixed
     {
         if ($concrete instanceof Closure) {
             return $concrete($this, $parameters);

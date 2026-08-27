@@ -139,7 +139,7 @@ it('supports an object instance as a contextual implementation', function (): vo
     $this->container
         ->when(SpecificServiceDispatcher::class)
         ->needs(Transport::class)
-        ->give(fn () => $expected);
+        ->give($expected);
 
     $dispatcher = $this->container->make(
         SpecificServiceDispatcher::class,

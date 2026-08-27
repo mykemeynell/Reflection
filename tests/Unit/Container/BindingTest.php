@@ -171,3 +171,21 @@ it('forgets a resolved singleton when the service is rebound', function (): void
     expect($this->container->make(Transport::class))
         ->toBeInstanceOf(SpecificTransportService::class);
 });
+
+it('forgets a resolved singleton when the service is rebound as a singleton', function (): void {
+    $this->container->singleton(
+        Transport::class,
+        HttpTransport::class,
+    );
+
+    expect($this->container->make(Transport::class))
+        ->toBeInstanceOf(HttpTransport::class);
+
+    $this->container->singleton(
+        Transport::class,
+        SpecificTransportService::class,
+    );
+
+    expect($this->container->make(Transport::class))
+        ->toBeInstanceOf(SpecificTransportService::class);
+});
