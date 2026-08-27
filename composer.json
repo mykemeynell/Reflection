@@ -31,7 +31,7 @@
         "psr/container": "^2.0"
     },
     "require-dev": {
-        "pestphp/pest": "^5.1",
+        "pestphp/pest": "^4.7|^5.1",
         "laravel/pint": "^1.30"
     },
     "config": {
