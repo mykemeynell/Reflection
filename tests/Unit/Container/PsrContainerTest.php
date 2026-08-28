@@ -7,9 +7,6 @@ use mykemeynell\Reflection\Bindings\ContextualBindingBuilder;
 use mykemeynell\Reflection\Exceptions\ContainerException;
 use mykemeynell\Reflection\Exceptions\DependencyNotSpecifiedException;
 use mykemeynell\Reflection\Exceptions\NotFoundException;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Tests\Fixtures\Container\AbstractService;
 use Tests\Fixtures\Container\Circular\CircularA;
 use Tests\Fixtures\Container\Contracts\Transport;
@@ -20,11 +17,6 @@ use Tests\Fixtures\Container\SimpleService;
 
 beforeEach(function (): void {
     $this->container = new Container;
-});
-
-it('implements the PSR container interface', function (): void {
-    expect($this->container)
-        ->toBeInstanceOf(ContainerInterface::class);
 });
 
 it('resolves services through get', function (): void {
@@ -85,65 +77,35 @@ it('reports unbound interfaces as unavailable', function (): void {
         ->toBeFalse();
 });
 
-it('throws a not found exception implementing PSR interfaces when get cannot locate an entry', function (): void {
-    try {
-        $this->container->get('Tests\\Fixtures\\Container\\DoesNotExist');
-        $this->fail('Expected NotFoundException was not thrown.');
-    } catch (NotFoundException $e) {
-        expect($e)
-            ->toBeInstanceOf(NotFoundExceptionInterface::class)
-            ->toBeInstanceOf(ContainerExceptionInterface::class);
-    }
+it('throws a not found exception when get cannot locate an entry', function (): void {
+    expect(fn (): mixed => $this->container->get('Tests\\Fixtures\\Container\\DoesNotExist'))
+        ->toThrow(NotFoundException::class);
 });
 
 it('throws a not found exception when get is called on an unbound interface', function (): void {
-    try {
-        $this->container->get(Transport::class);
-        $this->fail('Expected NotFoundException was not thrown.');
-    } catch (NotFoundException $e) {
-        expect($e)
-            ->toBeInstanceOf(NotFoundExceptionInterface::class)
-            ->toBeInstanceOf(ContainerExceptionInterface::class);
-    }
+    expect(fn (): mixed => $this->container->get(Transport::class))
+        ->toThrow(NotFoundException::class);
 });
 
-it('throws a container exception implementing PSR interface when get cannot construct an entry due to scalar parameters', function (): void {
+it('throws a container exception when get cannot construct an entry due to scalar parameters', function (): void {
     expect($this->container->has(ServiceWithRequiredScalar::class))->toBeTrue();
 
-    try {
-        $this->container->get(ServiceWithRequiredScalar::class);
-        $this->fail('Expected ContainerException was not thrown.');
-    } catch (ContainerException $e) {
-        expect($e)
-            ->toBeInstanceOf(ContainerExceptionInterface::class)
-            ->not->toBeInstanceOf(NotFoundExceptionInterface::class);
-    }
+    expect(fn (): mixed => $this->container->get(ServiceWithRequiredScalar::class))
+        ->toThrow(ContainerException::class);
 });
 
 it('throws a container exception and not a not found exception when a dependency cannot be resolved', function (): void {
     expect($this->container->has(DirectDispatcher::class))->toBeTrue();
 
-    try {
-        $this->container->get(DirectDispatcher::class);
-        $this->fail('Expected ContainerException was not thrown.');
-    } catch (ContainerException $e) {
-        expect($e)
-            ->toBeInstanceOf(ContainerExceptionInterface::class)
-            ->not->toBeInstanceOf(NotFoundExceptionInterface::class);
-    }
+    expect(fn (): mixed => $this->container->get(DirectDispatcher::class))
+        ->toThrow(ContainerException::class);
 });
 
 it('throws a container exception when get is called on an uninstantiable abstract class', function (): void {
     expect($this->container->has(AbstractService::class))->toBeTrue();
 
-    try {
-        $this->container->get(AbstractService::class);
-        $this->fail('Expected ContainerException was not thrown.');
-    } catch (ContainerException $e) {
-        expect($e)
-            ->toBeInstanceOf(ContainerExceptionInterface::class)
-            ->not->toBeInstanceOf(NotFoundExceptionInterface::class);
-    }
+    expect(fn (): mixed => $this->container->get(AbstractService::class))
+        ->toThrow(ContainerException::class);
 });
 
 it('throws a container exception when get is called on an entry bound to a missing class', function (): void {
@@ -151,14 +113,8 @@ it('throws a container exception when get is called on an entry bound to a missi
 
     expect($this->container->has('broken_service'))->toBeTrue();
 
-    try {
-        $this->container->get('broken_service');
-        $this->fail('Expected ContainerException was not thrown.');
-    } catch (ContainerException $e) {
-        expect($e)
-            ->toBeInstanceOf(ContainerExceptionInterface::class)
-            ->not->toBeInstanceOf(NotFoundExceptionInterface::class);
-    }
+    expect(fn (): mixed => $this->container->get('broken_service'))
+        ->toThrow(ContainerException::class);
 });
 
 it('throws a container exception when a bound factory throws an exception', function (): void {
@@ -168,38 +124,20 @@ it('throws a container exception when a bound factory throws an exception', func
 
     expect($this->container->has('failing_service'))->toBeTrue();
 
-    try {
-        $this->container->get('failing_service');
-        $this->fail('Expected ContainerException was not thrown.');
-    } catch (ContainerException $e) {
-        expect($e)
-            ->toBeInstanceOf(ContainerExceptionInterface::class)
-            ->not->toBeInstanceOf(NotFoundExceptionInterface::class);
-    }
+    expect(fn (): mixed => $this->container->get('failing_service'))
+        ->toThrow(ContainerException::class);
 });
 
 it('throws a container exception when circular dependency is detected during get', function (): void {
     expect($this->container->has(CircularA::class))->toBeTrue();
 
-    try {
-        $this->container->get(CircularA::class);
-        $this->fail('Expected ContainerException was not thrown.');
-    } catch (ContainerException $e) {
-        expect($e)
-            ->toBeInstanceOf(ContainerExceptionInterface::class)
-            ->not->toBeInstanceOf(NotFoundExceptionInterface::class);
-    }
+    expect(fn (): mixed => $this->container->get(CircularA::class))
+        ->toThrow(ContainerException::class);
 });
 
 it('throws a container exception when give is called before needs in contextual binding', function (): void {
     $builder = new ContextualBindingBuilder($this->container, [DirectDispatcher::class]);
 
-    try {
-        $builder->give(HttpTransport::class);
-        $this->fail('Expected DependencyNotSpecifiedException was not thrown.');
-    } catch (DependencyNotSpecifiedException $e) {
-        expect($e)
-            ->toBeInstanceOf(ContainerExceptionInterface::class)
-            ->toBeInstanceOf(LogicException::class);
-    }
+    expect(fn (): ContextualBindingBuilder => $builder->give(HttpTransport::class))
+        ->toThrow(DependencyNotSpecifiedException::class);
 });

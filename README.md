@@ -8,7 +8,7 @@
 
 Reflector is a dependency injection container for PHP powered by auto-wiring and reflection.
 
-It supports auto-wiring, contextual bindings, singletons, runtime parameter overrides, circular dependency detection, and PSR-11 compliance.
+It supports auto-wiring, contextual bindings, singletons, attribute-driven resolution, runtime parameter overrides, circular dependency detection, and PSR-11 compliance.
 
 ---
 
@@ -18,6 +18,7 @@ It supports auto-wiring, contextual bindings, singletons, runtime parameter over
 - **PSR-11 Compliance**: Implements `Psr\Container\ContainerInterface` (`get` and `has`).
 - **Contextual Binding**: Configure different implementations for specific classes using `when()->needs()->give()`.
 - **Singletons**: Share instances across multiple resolutions.
+- **Resolution Attributes**: Declare injection targets, scalar values, and singleton lifecycles directly on classes.
 - **Parameter Overrides**: Pass runtime parameters as associative arrays or named arguments.
 - **Circular Dependency Detection**: Detects recursive dependency chains and throws descriptive exceptions.
 - **Helper Function**: Global `app()` helper for quick access and resolution.
@@ -108,7 +109,7 @@ $mailer = $container->make(MailerInterface::class, ['key' => 'custom-key']);
 
 ### Singletons & Shared Instances
 
-Register a singleton to return the same instance on subsequent resolutions:
+Register a singleton to return the same instance on later resolutions:
 
 ```php
 $container->singleton(Database::class);
@@ -153,7 +154,7 @@ $container->when(ReportGenerator::class)
 
 ### Parameter Overrides
 
-Override constructor parameters during resolution:
+Override constructor parameters using named arguments:
 
 ```php
 class ApiService {
@@ -164,11 +165,113 @@ class ApiService {
     ) {}
 }
 
+$service = $container->make(
+    ApiService::class,
+    apiKey: 'my-token',
+    timeout: 60,
+);
+```
+
+Associative parameter arrays remain supported:
+
+```php
 $service = $container->make(ApiService::class, [
     'apiKey' => 'my-token',
     'timeout' => 60,
 ]);
 ```
+
+The previous named parameter-array form remains supported for compatibility:
+
+```php
+$service = $container->make(
+    ApiService::class,
+    parameters: ['apiKey' => 'my-token', 'timeout' => 60],
+);
+```
+
+Named arguments can also be used through the container returned by `app()`:
+
+```php
+$service = app()->make(ApiService::class, timeout: 60);
+```
+
+---
+
+### Resolution Attributes
+
+Use `Inject` when a constructor parameter needs a specific resolution target:
+
+```php
+use mykemeynell\Reflection\Attributes\Inject;
+
+final readonly class ReportService
+{
+    public function __construct(
+        #[Inject(S3Storage::class)]
+        public StorageInterface $storage,
+    ) {}
+}
+```
+
+An ordinary `Inject` is a fallback after contextual and global bindings. Add `Override` when the injection point must take precedence over those registrations:
+
+```php
+use mykemeynell\Reflection\Attributes\Inject;
+use mykemeynell\Reflection\Attributes\Override;
+
+final readonly class ReportService
+{
+    public function __construct(
+        #[Inject(S3Storage::class), Override]
+        public StorageInterface $storage,
+    ) {}
+}
+```
+
+Runtime arguments always take precedence, including when `Override` is present.
+
+Use `Value` for scalar constructor configuration:
+
+```php
+use mykemeynell\Reflection\Attributes\Value;
+
+final readonly class HttpClient
+{
+    public function __construct(
+        #[Value(3)]
+        public int $retries,
+        #[Value(30)]
+        public int $timeout,
+    ) {}
+}
+```
+
+Value attributes are checked against the declared parameter type. A runtime argument overrides the attribute value.
+
+Use `Singleton` to share an automatically resolved concrete class:
+
+```php
+use mykemeynell\Reflection\Attributes\Singleton;
+
+#[Singleton]
+final class DatabaseConnection {}
+```
+
+An explicit `instance()`, `singleton()`, or transient `bind()` registration overrides the class attribute.
+
+#### Resolution Precedence
+
+Object dependencies use this order:
+
+1. Runtime argument
+2. Contextual binding
+3. Registered instance or global binding
+4. `Inject`
+5. Automatic concrete-class resolution
+6. Constructor default
+
+For parameters marked with both `Inject` and `Override`, `Inject` moves directly below the runtime argument. Scalar parameters use runtime argument, `Value`, then constructor default. Lifecycle selection uses registered instance, explicit singleton, explicit transient binding, `Singleton`, then transient automatic resolution.
 
 ---
 

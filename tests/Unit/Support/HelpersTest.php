@@ -76,6 +76,12 @@ it('resolves a class with named arguments', function (): void {
         ->and($service->timeout)->toBe(45);
 });
 
+it('supports named arguments through the container returned by app', function (): void {
+    $service = app()->make(ServiceWithRequiredScalar::class, timeout: 45);
+
+    expect($service->timeout)->toBe(45);
+});
+
 it('resolves a class with a parameters array', function (): void {
     $service = app(ServiceWithRequiredScalar::class, ['timeout' => 45]);
 

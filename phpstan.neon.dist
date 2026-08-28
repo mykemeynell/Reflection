@@ -1,0 +1,8 @@
+includes:
+    - vendor/pestphp/pest-plugin-phpstan/extension.neon
+
+parameters:
+    level: 1
+    paths:
+        - src
+        - tests

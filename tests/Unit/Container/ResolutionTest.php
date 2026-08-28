@@ -86,6 +86,38 @@ it('resolves a class with required scalar parameters provided as named parameter
         ->and($service->timeout)->toBe(45);
 });
 
+it('accepts named arguments directly', function (): void {
+    $service = $this->container->make(
+        ServiceWithMixedParameters::class,
+        timeout: 45,
+        name: 'named',
+    );
+
+    expect($service->timeout)->toBe(45)
+        ->and($service->name)->toBe('named');
+});
+
+it('accepts the legacy parameter array as a named argument', function (): void {
+    $service = $this->container->make(
+        ServiceWithMixedParameters::class,
+        parameters: ['timeout' => 45, 'name' => 'legacy'],
+    );
+
+    expect($service->timeout)->toBe(45)
+        ->and($service->name)->toBe('legacy');
+});
+
+it('passes named arguments to a closure', function (): void {
+    $service = $this->container->make(
+        fn (Container $container, array $parameters): ServiceWithRequiredScalar => new ServiceWithRequiredScalar(
+            $parameters['timeout'],
+        ),
+        timeout: 75,
+    );
+
+    expect($service->timeout)->toBe(75);
+});
+
 it('overrides default scalar parameter when provided as a named parameter', function (): void {
     $service = $this->container->make(
         ServiceWithDefaultScalar::class,

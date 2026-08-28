@@ -23,7 +23,11 @@
     "scripts": {
         "test": "vendor/bin/pest",
         "lint": "vendor/bin/pint --parallel",
-        "lint:check": "@lint --test"
+        "lint:check": "@lint --test",
+        "analyze": [
+            "@putenv XDEBUG_MODE=off",
+            "@php -d memory_limit=-1 vendor/bin/phpstan analyse --debug --memory-limit=-1"
+        ]
     },
     "description": "Tiny PHP reflection implementation",
     "require": {
@@ -32,7 +36,9 @@
     },
     "require-dev": {
         "pestphp/pest": "^4.7|^5.1",
-        "laravel/pint": "^1.30"
+        "laravel/pint": "^1.30",
+        "phpstan/phpstan": "^2.2",
+        "pestphp/pest-plugin-phpstan": "^5.2"
     },
     "config": {
         "allow-plugins": {

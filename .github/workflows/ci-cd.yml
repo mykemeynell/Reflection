@@ -38,7 +38,7 @@ jobs:
       - name: Run Tests
         env:
           XDEBUG_MODE: coverage
-        run: composer test --coverage-text
+        run: composer test -- --coverage --min=100
 
   release-please:
     name: Release Please
