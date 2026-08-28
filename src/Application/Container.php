@@ -5,7 +5,14 @@ declare(strict_types=1);
 namespace mykemeynell\Reflection\Application;
 
 use Closure;
+use mykemeynell\Reflection\Attributes\Inject;
+use mykemeynell\Reflection\Attributes\Override;
+use mykemeynell\Reflection\Attributes\Singleton;
+use mykemeynell\Reflection\Attributes\Value;
 use mykemeynell\Reflection\Bindings\ContextualBindingBuilder;
+use mykemeynell\Reflection\Concerns\InteractsWithAttributes;
+use mykemeynell\Reflection\Concerns\InteractsWithReflection;
+use mykemeynell\Reflection\Concerns\NormalizesParameters;
 use mykemeynell\Reflection\Exceptions\ContainerException;
 use mykemeynell\Reflection\Exceptions\NotFoundException;
 use Psr\Container\ContainerExceptionInterface;
@@ -18,6 +25,10 @@ use Throwable;
 
 final class Container implements ContainerInterface
 {
+    use InteractsWithAttributes;
+    use InteractsWithReflection;
+    use NormalizesParameters;
+
     /**
      * @var array<class-string|string, array {
      *     concrete: class-string|Closure|object,
@@ -44,7 +55,7 @@ final class Container implements ContainerInterface
     private static self $instance;
 
     /**
-     * Constructor method that initializes the class instance.
+     * Constructor method that initialises the class instance.
      *
      * @return void
      */
@@ -176,7 +187,7 @@ final class Container implements ContainerInterface
      *
      * @param  array  $consumers  An array of classes or interfaces that consume the dependency.
      * @param  string  $dependency  The dependency to be resolved for the specified consumers.
-     * @param  Closure|string|object  $implementation  The concrete implementation, closure, or object instance to resolve the dependency.
+     * @param  string|object  $implementation  The concrete implementation, closure, or object instance to resolve the dependency.
      */
     public function addContextualBinding(
         array $consumers,
@@ -192,25 +203,37 @@ final class Container implements ContainerInterface
      * Resolves and returns an instance of the specified abstract type.
      *
      * If the abstract type has already been resolved as a singleton, the
-     * same instance is returned. Otherwise, the type's binding is resolved
+     * same instance is returned. Otherwise, the type's binding is resolved,
      * and a new instance is created. Supports managing singleton objects
      * and detecting circular dependencies during resolution.
      *
      * @param  string|Closure  $abstract  The identifier of the abstract type or closure to resolve.
-     * @param  array  $parameters  Named parameters that are to be passed to the abstract during resolution.
+     * @param  mixed  ...$parameters  Named parameters, one associative parameter array, or a legacy parameters array.
      * @return mixed The resolved instance of the abstract type.
      *
      * @throws ContainerException If a circular dependency is detected during resolution.
      */
-    public function make(string|Closure $abstract, array $parameters = []): mixed
+    public function make(string|Closure $abstract, mixed ...$parameters): mixed
     {
+        $parameters = $this->normalizeParameters($parameters);
+
         if (is_string($abstract) && isset($this->instances[$abstract])) {
             return $this->instances[$abstract];
         }
 
-        $binding = is_string($abstract) && isset($this->bindings[$abstract])
+        $hasExplicitBinding = is_string($abstract) && isset($this->bindings[$abstract]);
+        $binding = $hasExplicitBinding
             ? $this->bindings[$abstract]
             : self::bindingToArray($abstract, singleton: false);
+
+        if (
+            is_string($abstract)
+            && ! $hasExplicitBinding
+            && class_exists($abstract)
+            && $this->attributeInstance(new ReflectionClass($abstract), Singleton::class) instanceof Singleton
+        ) {
+            $binding['singleton'] = true;
+        }
 
         if (is_string($abstract)) {
             if (in_array($abstract, $this->resolving, strict: true)) {
@@ -320,13 +343,47 @@ final class Container implements ContainerInterface
         ReflectionParameter $parameter,
         array $parameters = []
     ): mixed {
+        /** @var Inject|null $inject */
+        $inject = $this->attributeInstance($parameter, Inject::class);
+
+        /** @var Override|null $override */
+        $override = $this->attributeInstance($parameter, Override::class);
+
+        /** @var Value|null $value */
+        $value = $this->attributeInstance($parameter, Value::class);
+
+        $this->validateParameterAttributes($consumer, $parameter, $inject, $override, $value);
+
         if (array_key_exists($parameter->getName(), $parameters)) {
             return $parameters[$parameter->getName()];
+        }
+
+        if ($inject !== null && $override !== null) {
+            return $this->resolveInjectedParameter($consumer, $parameter, $inject);
+        }
+
+        if ($value !== null) {
+            if (! $this->parameterAcceptsValue($parameter, $value->value)) {
+                throw new ContainerException(
+                    sprintf(
+                        'Value for parameter [$%s] while building [%s] must be of type [%s].',
+                        $parameter->getName(),
+                        $consumer,
+                        $this->parameterTypeName($parameter),
+                    )
+                );
+            }
+
+            return $value->value;
         }
 
         $type = $parameter->getType();
 
         if (! $type instanceof ReflectionNamedType || $type->isBuiltin()) {
+            if ($inject !== null) {
+                return $this->resolveInjectedParameter($consumer, $parameter, $inject);
+            }
+
             if ($parameter->isDefaultValueAvailable()) {
                 return $parameter->getDefaultValue();
             }
@@ -344,6 +401,22 @@ final class Container implements ContainerInterface
             );
         }
 
+        if (isset($this->instances[$dependency]) || isset($this->bindings[$dependency])) {
+            return $this->make($dependency);
+        }
+
+        if ($inject !== null) {
+            return $this->resolveInjectedParameter($consumer, $parameter, $inject);
+        }
+
+        if (class_exists($dependency)) {
+            return $this->make($dependency);
+        }
+
+        if ($parameter->isDefaultValueAvailable()) {
+            return $parameter->getDefaultValue();
+        }
+
         return $this->make($dependency);
     }
 
@@ -352,7 +425,7 @@ final class Container implements ContainerInterface
      *
      * @param  string|Closure  $concrete  The concrete implementation or a closure defining the binding.
      * @param  bool  $singleton  Indicates whether the binding should be treated as a singleton.
-     * @return array{concrete: string, singelton: bool} An associative array containing the binding information.
+     * @return array{concrete: string|Closure, singleton: bool} An associative array containing the binding information.
      */
     private static function bindingToArray(string|Closure $concrete, bool $singleton): array
     {
