@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.1.0](https://github.com/mykemeynell/Reflection/compare/v2.0.0...v2.1.0) (2026-08-28)
+
+
+### Features
+
+* **ci/cd:** integrate PHPStan static analysis tool ([0f588ad](https://github.com/mykemeynell/Reflection/commit/0f588ad3cfc1a473f5567808b7370f509c5a101f))
+* **container:** support attributes and named make arguments ([ea9dc41](https://github.com/mykemeynell/Reflection/commit/ea9dc41255d97fb1c9ee929751c3b749e01dcebe))
+
+
+### Miscellaneous Chores
+
+* add MIT license file ([0b0fa4e](https://github.com/mykemeynell/Reflection/commit/0b0fa4e393a2919f956f412bdee9007d3c73bff5))
+* **tests:** remove unused imports in `StrictTypesTest.php` ([d551613](https://github.com/mykemeynell/Reflection/commit/d551613364b28857b79ebaf4504ca5253d81fcf0))
+
 ## [2.0.0](https://github.com/mykemeynell/Reflection/compare/v1.0.0...v2.0.0) (2026-08-27)
 
 
