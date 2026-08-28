@@ -1,8 +1,11 @@
 includes:
-    - vendor/pestphp/pest-plugin-phpstan/extension.neon
+    - tools/phpstan/vendor/pestphp/pest-plugin-phpstan/extension.neon
 
 parameters:
     level: 1
+    phpVersion: 80300
+    bootstrapFiles:
+        - vendor/autoload.php
     paths:
         - src
         - tests

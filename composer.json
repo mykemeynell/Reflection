@@ -24,9 +24,10 @@
         "test": "vendor/bin/pest",
         "lint": "vendor/bin/pint --parallel",
         "lint:check": "@lint --test",
+        "analyze:install": "composer install --working-dir=tools/phpstan --prefer-dist --no-progress --no-interaction",
         "analyze": [
             "@putenv XDEBUG_MODE=off",
-            "@php -d memory_limit=-1 vendor/bin/phpstan analyse --debug --memory-limit=-1"
+            "@php -d memory_limit=-1 tools/phpstan/vendor/bin/phpstan analyse --debug --memory-limit=-1"
         ]
     },
     "description": "Tiny PHP reflection implementation",
@@ -36,9 +37,7 @@
     },
     "require-dev": {
         "pestphp/pest": "^4.7|^5.1",
-        "laravel/pint": "^1.30",
-        "phpstan/phpstan": "^2.2",
-        "pestphp/pest-plugin-phpstan": "^5.2"
+        "laravel/pint": "^1.30"
     },
     "config": {
         "allow-plugins": {

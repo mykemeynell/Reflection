@@ -357,6 +357,13 @@ Format code style:
 composer lint
 ```
 
+Install the PHP 8.4 static-analysis toolchain and run PHPStan:
+
+```bash
+composer analyze:install
+composer analyze
+```
+
 ---
 
 ## License
