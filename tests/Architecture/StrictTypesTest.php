@@ -2,10 +2,6 @@
 
 declare(strict_types=1);
 
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
-use SplFileInfo;
-
 function projectPhpFiles(): array
 {
     $root = dirname(__DIR__, 2);
