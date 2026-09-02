@@ -1,12 +1,12 @@
-# Reflector
+# Reflection
 
-[![CI/CD (main)](https://img.shields.io/github/actions/workflow/status/mykemeynell/reflector/ci-cd.yml?label=stable%20(main)&branch=main)](https://github.com/mykemeynell/Reflector/actions/workflows/ci-cd.yml)
-[![CI/CD (dev)](https://img.shields.io/github/actions/workflow/status/mykemeynell/reflector/ci-cd.yml?label=dev&branch=dev)](https://github.com/mykemeynell/Reflector/actions/workflows/ci-cd.yml)
+[![CI/CD (main)](https://img.shields.io/github/actions/workflow/status/mykemeynell/reflection/ci-cd.yml?label=stable%20(main)&branch=main)](https://github.com/mykemeynell/reflection/actions/workflows/ci-cd.yml)
+[![CI/CD (dev)](https://img.shields.io/github/actions/workflow/status/mykemeynell/reflection/ci-cd.yml?label=dev&branch=dev)](https://github.com/mykemeynell/reflection/actions/workflows/ci-cd.yml)
 [![PHP Version](https://img.shields.io/badge/PHP-8.3%2B-blue.svg)](https://www.php.net)
 [![PSR-11 Compliant](https://img.shields.io/badge/PSR--11-Compliant-green.svg)](https://www.php-fig.org/psr/psr-11/)
 [![License](https://img.shields.io/badge/License-MIT-lightgrey.svg)](LICENSE)
 
-Reflector is a dependency injection container for PHP powered by auto-wiring and reflection.
+Reflection is a dependency injection container for PHP powered by auto-wiring and reflection.
 
 It supports auto-wiring, contextual bindings, singletons, attribute-driven resolution, runtime parameter overrides, circular dependency detection, and PSR-11 compliance.
 
@@ -296,7 +296,7 @@ $container->make(ServiceA::class);
 
 ### PSR-11 Compliance
 
-Reflector implements `Psr\Container\ContainerInterface`:
+Reflection implements `Psr\Container\ContainerInterface`:
 
 ```php
 use Psr\Container\ContainerInterface;
