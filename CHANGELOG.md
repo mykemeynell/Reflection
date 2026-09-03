@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.2.0](https://github.com/mykemeynell/reflection/compare/v2.1.0...v2.2.0) (2026-09-03)
+
+
+### Features
+
+* array access implementation ([a5a9aa0](https://github.com/mykemeynell/reflection/commit/a5a9aa0009c0da74dcc00a983dd22a4fb9075e6a))
+* **container:** implement ArrayAccess support with full test coverage ([41be466](https://github.com/mykemeynell/reflection/commit/41be466577e2e6e4d567f46b29001bdfc0bb4305))
+
+
+### Miscellaneous Chores
+
+* **ci/cd:** replace CI/CD workflow with modular reusable workflows ([6b7f352](https://github.com/mykemeynell/reflection/commit/6b7f3527f1178612012ddf2432beb7fc02f1f15d))
+* **docs:** rename project and update references in README ([c50bff2](https://github.com/mykemeynell/reflection/commit/c50bff240da6224c02a1bc0a353ce92361a0a6ef))
+* set license to MIT in composer.json ([62ee08d](https://github.com/mykemeynell/reflection/commit/62ee08d836aba5abaa7c37d467d6bf9789b5c074))
+* trigger workflow ([89aeae1](https://github.com/mykemeynell/reflection/commit/89aeae14e11d13dc3107cbd72497b194ef28693e))
+
 ## [2.1.0](https://github.com/mykemeynell/Reflection/compare/v2.0.0...v2.1.0) (2026-08-28)
 
 
