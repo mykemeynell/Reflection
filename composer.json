@@ -1,6 +1,7 @@
 {
     "name": "mykemeynell/reflection",
     "type": "library",
+    "license": "MIT",
     "authors": [
         {
             "name": "Myke Meynell",

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace mykemeynell\Reflection\Application;
 
+use ArrayAccess;
 use Closure;
 use mykemeynell\Reflection\Attributes\Inject;
 use mykemeynell\Reflection\Attributes\Override;
@@ -23,7 +24,7 @@ use ReflectionNamedType;
 use ReflectionParameter;
 use Throwable;
 
-final class Container implements ContainerInterface
+final class Container implements ArrayAccess, ContainerInterface
 {
     use InteractsWithAttributes;
     use InteractsWithReflection;
@@ -430,5 +431,63 @@ final class Container implements ContainerInterface
     private static function bindingToArray(string|Closure $concrete, bool $singleton): array
     {
         return compact('concrete', 'singleton');
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    #[\Override]
+    public function offsetExists(mixed $offset): bool
+    {
+        return $this->has($offset);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    #[\Override]
+    public function offsetGet(mixed $offset): mixed
+    {
+        return $this->get($offset);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    #[\Override]
+    public function offsetSet(mixed $offset, mixed $value): void
+    {
+        if (is_object($value) && ! $value instanceof Closure) {
+            $this->instance($offset, $value);
+
+            return;
+        }
+
+        if ($value instanceof Closure) {
+            $this->bind($offset, $value);
+
+            return;
+        }
+
+        $this->bind($offset, $value);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    #[\Override]
+    public function offsetUnset(mixed $offset): void
+    {
+        if (! is_string($offset)) {
+            throw new \TypeError('Container offsets must be strings.');
+        }
+
+        if (array_key_exists($offset, $this->bindings)) {
+            unset($this->bindings[$offset]);
+        }
+
+        if (array_key_exists($offset, $this->instances)) {
+            unset($this->instances[$offset]);
+        }
     }
 }
