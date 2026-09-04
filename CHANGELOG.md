@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.2.1](https://github.com/mykemeynell/reflection/compare/v2.2.0...v2.2.1) (2026-09-04)
+
+
+### Miscellaneous Chores
+
+* add CODEOWNERS file ([c1468a1](https://github.com/mykemeynell/reflection/commit/c1468a189f9a44e499f54e2f8805691138d5dff5))
+* promote dev to main ([7cdca77](https://github.com/mykemeynell/reflection/commit/7cdca77adfde47a5e48460673b8b6b86b09a7ade))
+* update CI/CD badge URLs in README to reference `tests.yml` ([ee45bce](https://github.com/mykemeynell/reflection/commit/ee45bce2c604e3aaab005cca2476862ed7445fa6))
+* update CI/CD badge URLs in README to reference `tests.yml` ([3ff7688](https://github.com/mykemeynell/reflection/commit/3ff7688f30413b32ee5335da93ae7458a69da043))
+
 ## [2.2.0](https://github.com/mykemeynell/reflection/compare/v2.1.0...v2.2.0) (2026-09-03)
 
 
