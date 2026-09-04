@@ -1,7 +1,7 @@
 # Reflection
 
-[![CI/CD (main)](https://img.shields.io/github/actions/workflow/status/mykemeynell/reflection/ci-cd.yml?label=stable%20(main)&branch=main)](https://github.com/mykemeynell/reflection/actions/workflows/ci-cd.yml)
-[![CI/CD (dev)](https://img.shields.io/github/actions/workflow/status/mykemeynell/reflection/ci-cd.yml?label=dev&branch=dev)](https://github.com/mykemeynell/reflection/actions/workflows/ci-cd.yml)
+[![CI/CD (main)](https://img.shields.io/github/actions/workflow/status/mykemeynell/reflection/tests.yml?label=stable%20(main)&branch=main)](https://github.com/mykemeynell/reflection/actions/workflows/tests.yml)
+[![CI/CD (dev)](https://img.shields.io/github/actions/workflow/status/mykemeynell/reflection/tests.yml?label=dev&branch=dev)](https://github.com/mykemeynell/reflection/actions/workflows/tests.yml)
 [![PHP Version](https://img.shields.io/badge/PHP-8.3%2B-blue.svg)](https://www.php.net)
 [![PSR-11 Compliant](https://img.shields.io/badge/PSR--11-Compliant-green.svg)](https://www.php-fig.org/psr/psr-11/)
 [![License](https://img.shields.io/badge/License-MIT-lightgrey.svg)](LICENSE)
